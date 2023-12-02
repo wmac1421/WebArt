@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Photographs Reduced to Symbols</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.4.0/p5.js"></script>
+  <style>
+    body {
+      transform: scale(0.4);
+      display: flex;
+      justify-content: center;
+      text-align: center;
+      align-items: center;
+      flex-direction: column;
+      height: 100vh;
+      margin: 0;
+    }
+
+    h1 {
+      font-family: "Helvetica", sans-serif;
+      font-size: 44px;
+      margin: 20px 0;
+    }
+
+    .buttons {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin-top: 20px;
+    }
+
+    button {
+      font-family: "Helvetica", sans-serif;
+      font-size: 38px;
+      margin: 0 10px;
+    }
+  </style>
+</head>
+<body>
+  <h1>Photographs Reduced to Keyboard Symbols</h1>
+
+  <div class="buttons">
+    <button id="backButton" onclick="goBack()">Back</button>
+    <button id="nextButton" onclick="goNext()">Next</button>
+  </div>
+
+  <script>
+    let photoData = [
+      {
+        title: "Richard Avendon, Ronald Reagan",
+        url: "https://imagizer.imageshack.com/v2/1600x1200q70/923/iD6nms.jpg"
+      },
+
+      {
+        title: "Robert Frank, The Americans",
+        url: "https://imagizer.imageshack.com/img923/3923/qTVvtd.jpg"
+      },
+      {
+        title: "Diane Arbus, Twins",
+        url: "https://imagizer.imageshack.com/v2/1600x1200q70/924/uaEhzb.jpg"
+      },
+      {
+        title: "Gary Winogrand",
+        url: "https://imagizer.imageshack.com/v2/1600x1200q70/922/YyIwp1.jpg"
+      },
+      {
+        title: "Edward Weston",
+        url: "https://imagizer.imageshack.com/v2/1600x1200q70/922/KxdPS1.jpg"
+      },
+      {
+        title: "Steiglitz",
+        url: "https://imagizer.imageshack.com/v2/1600x1200q70/922/HBLleB.jpg"
+      },
+    
+
+
+
+
+
+      // need to add more photos from mongoDB database
+      //mongo db database: 
+      //login; wmacna01
+    ];
+
+    let selectedPhotoIndex = 0;
+    let logoOptions = ["?", "$"];
+
+
+    function setup() {
+      createCanvas(1500, 1700);
+      noLoop();
+      loadSelectedPhoto();
+    }
+
+    function loadSelectedPhoto() {
+      let selectedPhoto = photoData[selectedPhotoIndex];
+      loadImage(selectedPhoto.url, function(photo) {
+        image(photo, 0, 0);
+        let selectedLogo = random(logoOptions);
+        redrawWithLogo(photo, selectedPhoto.title, selectedLogo);
+      });
+    }
+
+    function goBack() {
+      if (selectedPhotoIndex > 0) {
+        selectedPhotoIndex--;
+        loadSelectedPhoto();
+      }
+    }
+
+    function goNext() {
+      if (selectedPhotoIndex < photoData.length - 1) {
+        selectedPhotoIndex++;
+        loadSelectedPhoto();
+      }
+    }
+
+    function redrawWithLogo(photo, title, logo) {
+      background(255);
+
+  
+      let logoSize = 20;
+      let spacing = 20;
+      let brightnessThreshold = 140;
+
+      for (let x = 0; x < photo.width; x += spacing) {
+        for (let y = 0; y < photo.height; y += spacing) {
+          let c = photo.get(x, y); // Get the color at this pixel
+          let brightness = (red(c) + green(c) + blue(c)) / 3; // Calculate brightness
+
+          if (brightness < brightnessThreshold) {
+            fill(0); // Set fill color to black
+            textSize(logoSize);
+            text(logo, x, y); // Draw the selected logo at the current position
+          }
+        }
+      }
+
+      // Display the title from the JSON list under the photo
+      fill(0);
+      textSize(54);
+      textAlign(CENTER);
+      text(title, photo.width/2, photo.height+100);
+    }
+  </script>
+</body>
+</html>
