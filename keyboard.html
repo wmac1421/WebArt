@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Keyboard Photography A to Z</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.4.0/p5.js"></script>
+  <style>
+    html, body {
+      height: 100%;
+    }
+
+    canvas {
+   margin-top: 20%;
+   margin-left: 100px;
+}
+  
+
+
+    h1 {
+      font-family: "Helvetica", sans-serif;
+      font-size: 30px;
+      font-weight: 100;
+      overflow: visible;
+      position: absolute;
+      top: 2%;
+      left: 2%;
+    }
+
+    .buttons {
+      display: flex;
+      align-content: center;
+      position: absolute;
+      left: 2%;
+      top: 15%;
+    }
+
+    body {
+      margin: 20 20;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+  </style>
+</head>
+<body>
+  <h1>Keyboard Photography A to Z</h1>
+
+  <div class="buttons">
+    <button style="font-size: 20px; font-family: 'Courier New', Courier, monospace" onclick="goBack()">Back</button>
+    <button style="font-size: 20px; font-family: 'Courier New', Courier, monospace" onclick="goNext()">Next</button>
+  </div>
+
+
+  <script>
+    let photoData = [
+      {
+        title: "Richard Avendon",
+        url: "https://imagizer.imageshack.com/v2/1600x1200q70/923/iD6nms.jpg",
+        logo: "*"
+
+      },
+      {
+        title:"Bill Burke",
+        url: "https://imagizer.imageshack.com/v2/1600x1200q70/923/BZ93Dr.png",
+        logo: ":"
+      },
+      {
+        title: "Robert Frank, The Americans",
+        url: "https://imagizer.imageshack.com/img923/3923/qTVvtd.jpg",
+        logo: "%"
+      },
+      {
+        title: "Diane Arbus, Twins",
+        url: "https://imagizer.imageshack.com/v2/1600x1200q70/924/uaEhzb.jpg",
+        logo: "//"
+      },
+      {
+        title: "Gary Winogrand",
+        url: "https://imagizer.imageshack.com/v2/1600x1200q70/923/2YA9g2.jpg",
+        logo: "<>"
+      },
+      {
+        title: "Steiglitz",
+        url: "https://imagizer.imageshack.com/v2/1600x1200q70/922/HBLleB.jpg",
+        logo: "#"
+      },
+      {
+        title: "Edward Weston",
+        url: "https://imagizer.imageshack.com/v2/1600x1200q70/922/KxdPS1.jpg",
+        logo: "~"
+      },
+      {
+        title: "Robert Mapplethorpe",
+        url: "https://imagizer.imageshack.com/v2/1600x1200q70/923/awHUdU.jpg",
+        logo:"+"
+      }, 
+      {
+        title: "Edweard Muybridge", 
+        url: "https://imagizer.imageshack.com/v2/1600x1200q70/924/cGm0hu.png", 
+        logo: "\\"
+      }
+       
+    ];
+
+    let selectedPhotoIndex = 0;
+    let logoOptions = ["?", "$", "{}", "*", "-", "#", "^", "!", "~", "@", "%", "/", ";"];
+
+    function setup() {
+      createCanvas(1200, 800);
+      noLoop();
+      loadSelectedPhoto();
+    }
+
+    function loadSelectedPhoto() {
+  let selectedPhoto = photoData[selectedPhotoIndex];
+  loadImage(selectedPhoto.url, function(photo) {
+    let displayWidth = 600; // Adjust this value to set the desired display width
+    let displayHeight = (photo.height / photo.width) * displayWidth;
+    photo.resize(displayWidth, displayHeight);
+    createCanvas(displayWidth, displayHeight+100);
+    let x = (width - photo.width) / 2;
+    let y = (height - photo.height) / 2;
+    image(photo, x, y);
+    let selectedLogo = selectedPhoto.logo;
+    redrawWithLogo(photo, selectedPhoto.title, selectedLogo);
+  });
+}
+
+
+    function goBack() {
+      if (selectedPhotoIndex > 0) {
+        selectedPhotoIndex--;
+        loadSelectedPhoto();
+      }
+    }
+
+    function goNext() {
+      if (selectedPhotoIndex < photoData.length - 1) {
+        selectedPhotoIndex++;
+        loadSelectedPhoto();
+      }
+    }
+
+    function redrawWithLogo(photo, title, logo) {
+      background(255);
+      let logoSize = 15;
+      let spacing = 10;
+      let brightnessThreshold = 140;
+
+      for (let x = 0; x < photo.width; x += spacing) {
+        for (let y = 0; y < photo.height; y += spacing) {
+          let c = photo.get(x, y);
+          let brightness = (red(c) + green(c) + blue(c)) / 3;
+
+          if (brightness < brightnessThreshold) {
+            fill(0);
+            textFont("'Helvetica'");
+            textSize(logoSize);
+            text(logo, x, y);
+          }
+        }
+      }
+      fill(0);
+  textSize(24);
+  textAlign(CENTER);
+  textFont("'Courier New', Courier, monospace");
+  text(title, photo.width / 2, photo.height + 40);
+    }
+
+ 
+  </script>
+</body>
+</html>
